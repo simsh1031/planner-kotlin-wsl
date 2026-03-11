@@ -4,8 +4,10 @@ import com.example.planner.domain.todo.Todo
 import com.example.planner.repository.ScheduleRepository
 import com.example.planner.repository.TodoRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class TodoService(
     private val todoRepository: TodoRepository,
     private val scheduleRepository: ScheduleRepository
@@ -28,7 +30,11 @@ class TodoService(
         return todoRepository.findAll()
     }
 
-    fun completeTodo(todoId: Long) {
+    fun getTodosByCompleted(completed: Boolean): List<Todo> {
+        return todoRepository.findByCompleted(completed)
+    }
+
+    fun completeTodo(todoId: Long): Todo {
 
         val todo = todoRepository.findById(todoId)
             .orElseThrow { IllegalArgumentException("Todo not found") }
@@ -37,9 +43,10 @@ class TodoService(
             todoId = todo.todoId,
             content = todo.content,
             completed = true,
+            dueDate = todo.dueDate,
             schedule = todo.schedule
         )
 
-        todoRepository.save(updated)
+        return todoRepository.save(updated)
     }
 }

@@ -18,7 +18,7 @@ class Todo(
 
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    val dueDate: LocalDateTime?,
+    val dueDate: LocalDateTime? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")

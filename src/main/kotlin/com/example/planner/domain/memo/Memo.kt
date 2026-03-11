@@ -5,7 +5,7 @@ import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
-class Memo(
+data class Memo(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
