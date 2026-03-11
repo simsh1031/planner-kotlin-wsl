@@ -1,4 +1,4 @@
-package com.example.Planner
+package com.example.planner
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
