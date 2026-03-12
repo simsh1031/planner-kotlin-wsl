@@ -7,4 +7,5 @@ interface TodoRepository : JpaRepository<Todo, Long> {
 
     fun findByCompleted(completed: Boolean): List<Todo>
 
+    fun deleteByScheduleScheduleId(scheduleId: Long)  // ← 추가
 }

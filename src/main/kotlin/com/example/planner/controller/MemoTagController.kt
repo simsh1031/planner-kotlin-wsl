@@ -1,9 +1,9 @@
 package com.example.planner.controller
 
+import com.example.planner.dto.common.DeleteResponse
 import com.example.planner.dto.memotag.AddTagToMemoRequest
 import com.example.planner.dto.memotag.MemoTagResponse
 import com.example.planner.dto.tag.TagResponse
-import com.example.planner.repository.MemoTagRepository
 import com.example.planner.service.MemoTagService
 import org.springframework.web.bind.annotation.*
 
@@ -44,5 +44,18 @@ class MemoTagController(
                 name = it.name
             )
         }
+    }
+
+    @DeleteMapping("/{memoId}/tags/{tagId}")  // ← 추가
+    fun removeTagFromMemo(
+        @PathVariable memoId: Long,
+        @PathVariable tagId: Long
+    ): DeleteResponse {
+
+        memoTagService.removeTagFromMemo(memoId, tagId)
+
+        return DeleteResponse(
+            message = "Tag removed successfully"
+        )
     }
 }

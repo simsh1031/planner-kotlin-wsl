@@ -39,4 +39,8 @@ class MemoTagService(
 
         return memoTags.map { it.tag }
     }
+
+    fun removeTagFromMemo(memoId: Long, tagId: Long) {
+        memoTagRepository.deleteByMemoMemoIdAndTagTagId(memoId, tagId)
+    }
 }
