@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+.env
+application-dev.yml

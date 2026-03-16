@@ -1,20 +1,5 @@
 spring:
   application:
     name: planner
-
-  datasource:
-    # nameserver 주소를 사용합니다.
-    url: jdbc:mysql://172.25.144.1:3306/planner?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: "1031" # 숫자로만 되어있으니 따옴표를 붙여주는 게 안전합니다.
-
-  jpa:
-    hibernate:
-      ddl-auto: update # none # create # update
-    show-sql: true
-    properties:
-      hibernate:
-        # 최신 버전용 통합 Dialect입니다.
-        dialect: org.hibernate.dialect.MySQLDialect
-        # 실제 쿼리 포맷을 예쁘게 보여줍니다.
-        format_sql: true
+  profiles:
+    active: dev  # ✅ 이거 추가

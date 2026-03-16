@@ -44,26 +44,47 @@ class ScheduleService(
     }
 
     fun getSchedulesByDate(date: LocalDate): List<Schedule> {
-
         val start = date.atStartOfDay()
         val end = date.atTime(23, 59, 59)
 
-        return scheduleRepository.findByStartDateBetween(start, end)
+        // 검색 날짜가 일정 기간 안에 포함되는 모든 일정 반환
+        return scheduleRepository.findByDateOverlapping(start, end)
     }
 
     fun getSchedulesByPeriod(start: LocalDate, end: LocalDate): List<Schedule> {
-
         val startDateTime = start.atStartOfDay()
         val endDateTime = end.atTime(23, 59, 59)
 
-        return scheduleRepository.findByStartDateBetween(
-            startDateTime,
-            endDateTime
-        )
+        // 검색 기간과 겹치는 모든 일정 반환
+        return scheduleRepository.findByDateOverlapping(startDateTime, endDateTime)
     }
 
     fun deleteSchedule(scheduleId: Long) {
         todoRepository.deleteByScheduleScheduleId(scheduleId)  // ← Todo 먼저 삭제
         scheduleRepository.deleteById(scheduleId)
+    }
+
+    fun updateSchedule(
+        scheduleId: Long,
+        title: String,
+        description: String?,
+        startDate: LocalDateTime,
+        endDate: LocalDateTime
+    ): Schedule {
+
+        // 존재 여부 확인
+        if (!scheduleRepository.existsById(scheduleId)) {
+            throw IllegalArgumentException("Schedule not found")
+        }
+
+        scheduleRepository.updateSchedule(
+            scheduleId = scheduleId,
+            title = title,
+            description = description,
+            startDate = startDate,
+            endDate = endDate
+        )
+
+        return scheduleRepository.findById(scheduleId).get()
     }
 }
