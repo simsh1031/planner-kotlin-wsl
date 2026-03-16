@@ -12,16 +12,16 @@ class Schedule(
     val scheduleId: Long? = null,
 
     @Column(nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(columnDefinition = "TEXT")
-    val description: String?,
+    var description: String?,
 
-    val startDate: LocalDateTime,
+    var startDate: LocalDateTime,
 
-    val endDate: LocalDateTime,
+    var endDate: LocalDateTime,
 
-    val createdAt: LocalDateTime = LocalDateTime.now(),
+    var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

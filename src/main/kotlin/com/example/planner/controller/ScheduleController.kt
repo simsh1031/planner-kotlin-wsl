@@ -3,6 +3,7 @@ package com.example.planner.controller
 import com.example.planner.dto.common.DeleteResponse
 import com.example.planner.dto.schedule.CreateScheduleRequest
 import com.example.planner.dto.schedule.ScheduleResponse
+import com.example.planner.dto.schedule.UpdateScheduleRequest
 import com.example.planner.service.ScheduleService
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
@@ -81,6 +82,29 @@ class ScheduleController(
 
         return DeleteResponse(
             message = "Schedule deleted successfully"
+        )
+    }
+
+    @PutMapping("/{scheduleId}")
+    fun updateSchedule(
+        @PathVariable scheduleId: Long,
+        @RequestBody request: UpdateScheduleRequest
+    ): ScheduleResponse {
+
+        val schedule = scheduleService.updateSchedule(
+            scheduleId = scheduleId,
+            title = request.title,
+            description = request.description,
+            startDate = LocalDateTime.parse(request.startDate),
+            endDate = LocalDateTime.parse(request.endDate)
+        )
+
+        return ScheduleResponse(
+            scheduleId = schedule.scheduleId,
+            title = schedule.title,
+            description = schedule.description,
+            startDate = schedule.startDate.toString(),
+            endDate = schedule.endDate.toString()
         )
     }
 }

@@ -2,13 +2,15 @@ package com.example.planner.controller
 
 import com.example.planner.dto.auth.LoginRequest
 import com.example.planner.dto.auth.LoginResponse
+import com.example.planner.security.JwtUtil
 import com.example.planner.service.UserService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
 class AuthController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val jwtUtil: JwtUtil
 ) {
 
     @PostMapping("/login")
@@ -21,12 +23,16 @@ class AuthController(
             request.password
         )
 
-        val token = "jwt-token"
+        val token = jwtUtil.generateToken(
+            userId = user.userId!!,
+            email = user.email
+        )
 
         return LoginResponse(
             accessToken = token,
             tokenType = "Bearer",
-            expiresIn = 3600
+            expiresIn = 3600,
+            userId = user.userId!!
         )
     }
 }
