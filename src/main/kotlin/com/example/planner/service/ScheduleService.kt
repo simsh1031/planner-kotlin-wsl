@@ -2,6 +2,7 @@ package com.example.planner.service
 
 import com.example.planner.domain.schedule.Schedule
 import com.example.planner.repository.ScheduleRepository
+import com.example.planner.repository.TodoRepository  // ← 추가
 import com.example.planner.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
 @Transactional
 class ScheduleService(
     private val scheduleRepository: ScheduleRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val todoRepository: TodoRepository  // ← 추가
 ) {
 
     fun createSchedule(
@@ -61,6 +63,7 @@ class ScheduleService(
     }
 
     fun deleteSchedule(scheduleId: Long) {
+        todoRepository.deleteByScheduleScheduleId(scheduleId)  // ← Todo 먼저 삭제
         scheduleRepository.deleteById(scheduleId)
     }
 }

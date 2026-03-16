@@ -2,6 +2,7 @@ package com.example.planner.service
 
 import com.example.planner.domain.memo.Memo
 import com.example.planner.repository.MemoRepository
+import com.example.planner.repository.MemoTagRepository  // ← 추가
 import com.example.planner.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class MemoService(
     private val memoRepository: MemoRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val memoTagRepository: MemoTagRepository  // ← 추가
 ) {
 
     fun createMemo(userId: Long, title: String, content: String): Memo {
@@ -32,6 +34,7 @@ class MemoService(
     }
 
     fun deleteMemo(memoId: Long) {
+        memoTagRepository.deleteByMemoMemoId(memoId)  // ← MemoTag 먼저 삭제
         memoRepository.deleteById(memoId)
     }
 
