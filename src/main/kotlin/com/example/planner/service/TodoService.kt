@@ -14,39 +14,24 @@ class TodoService(
 ) {
 
     fun createTodo(scheduleId: Long, content: String): Todo {
-
         val schedule = scheduleRepository.findById(scheduleId)
             .orElseThrow { IllegalArgumentException("Schedule not found") }
-
-        val todo = Todo(
-            content = content,
-            schedule = schedule
-        )
-
-        return todoRepository.save(todo)
+        return todoRepository.save(Todo(content = content, schedule = schedule))
     }
 
-    fun getTodos(): List<Todo> {
-        return todoRepository.findAll()
+    fun getTodos(userId: Long): List<Todo> {
+        return todoRepository.findByScheduleUserUserId(userId)  // ✅ userId로 필터링
     }
 
-    fun getTodosByCompleted(completed: Boolean): List<Todo> {
-        return todoRepository.findByCompleted(completed)
+    fun getTodosByCompleted(userId: Long, completed: Boolean): List<Todo> {
+        return todoRepository.findByScheduleUserUserIdAndCompleted(userId, completed)  // ✅
     }
 
     fun completeTodo(todoId: Long): Todo {
-
         val todo = todoRepository.findById(todoId)
             .orElseThrow { IllegalArgumentException("Todo not found") }
-
-        val updated = Todo(
-            todoId = todo.todoId,
-            content = todo.content,
-            completed = true,
-            dueDate = todo.dueDate,
-            schedule = todo.schedule
+        return todoRepository.save(
+            Todo(todoId = todo.todoId, content = todo.content, completed = true, dueDate = todo.dueDate, schedule = todo.schedule)
         )
-
-        return todoRepository.save(updated)
     }
 }

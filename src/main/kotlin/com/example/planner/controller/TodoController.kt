@@ -2,6 +2,7 @@ package com.example.planner.controller
 
 import com.example.planner.dto.todo.*
 import com.example.planner.service.TodoService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -11,15 +12,8 @@ class TodoController(
 ) {
 
     @PostMapping
-    fun createTodo(
-        @RequestBody request: CreateTodoRequest
-    ): TodoResponse {
-
-        val todo = todoService.createTodo(
-            scheduleId = request.scheduleId,
-            content = request.content
-        )
-
+    fun createTodo(@RequestBody request: CreateTodoRequest): TodoResponse {
+        val todo = todoService.createTodo(request.scheduleId, request.content)
         return TodoResponse(
             todoId = todo.todoId,
             scheduleId = todo.schedule.scheduleId!!,
@@ -30,13 +24,15 @@ class TodoController(
 
     @GetMapping
     fun getTodos(
-        @RequestParam(required = false) completed: Boolean?
+        @RequestParam(required = false) completed: Boolean?,
+        request: HttpServletRequest
     ): List<TodoResponse> {
+        val userId = request.getAttribute("userId") as Long
 
         val todos = if (completed != null) {
-            todoService.getTodosByCompleted(completed)
+            todoService.getTodosByCompleted(userId, completed)
         } else {
-            todoService.getTodos()
+            todoService.getTodos(userId)
         }
 
         return todos.map {
@@ -50,15 +46,8 @@ class TodoController(
     }
 
     @PatchMapping("/{todoId}/complete")
-    fun completeTodo(
-        @PathVariable todoId: Long
-    ): CompleteTodoResponse {
-
+    fun completeTodo(@PathVariable todoId: Long): CompleteTodoResponse {
         val todo = todoService.completeTodo(todoId)
-
-        return CompleteTodoResponse(
-            todoId = todo.todoId,
-            completed = todo.completed
-        )
+        return CompleteTodoResponse(todoId = todo.todoId, completed = todo.completed)
     }
 }

@@ -2,8 +2,8 @@ package com.example.planner.controller
 
 import com.example.planner.dto.common.DeleteResponse
 import com.example.planner.dto.memo.*
-import com.example.planner.repository.MemoRepository
 import com.example.planner.service.MemoService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,11 +14,13 @@ class MemoController(
 
     @PostMapping
     fun createMemo(
-        @RequestBody request: CreateMemoRequest
+        @RequestBody request: CreateMemoRequest,
+        httpRequest: HttpServletRequest
     ): MemoResponse {
+        val userId = httpRequest.getAttribute("userId") as Long
 
         val memo = memoService.createMemo(
-            userId = request.userId,
+            userId = userId,
             title = request.title,
             content = request.content
         )
@@ -33,11 +35,10 @@ class MemoController(
     }
 
     @GetMapping
-    fun getMemos(): List<MemoResponse> {
+    fun getMemos(request: HttpServletRequest): List<MemoResponse> {
+        val userId = request.getAttribute("userId") as Long
 
-        val memos = memoService.getMemos()
-
-        return memos.map {
+        return memoService.getMemosByUserId(userId).map {
             MemoResponse(
                 memoId = it.memoId,
                 userId = it.user.userId,
@@ -54,11 +55,7 @@ class MemoController(
         @RequestBody request: UpdateMemoRequest
     ): MemoResponse {
 
-        val memo = memoService.updateMemo(
-            memoId,
-            request.title,
-            request.content
-        )
+        val memo = memoService.updateMemo(memoId, request.title, request.content)
 
         return MemoResponse(
             memoId = memo.memoId,
@@ -70,14 +67,8 @@ class MemoController(
     }
 
     @DeleteMapping("/{memoId}")
-    fun deleteMemo(
-        @PathVariable memoId: Long
-    ): DeleteResponse {
-
+    fun deleteMemo(@PathVariable memoId: Long): DeleteResponse {
         memoService.deleteMemo(memoId)
-
-        return DeleteResponse(
-            message = "Memo deleted successfully"
-        )
+        return DeleteResponse(message = "Memo deleted successfully")
     }
 }
