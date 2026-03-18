@@ -14,10 +14,10 @@ class User(
     val email: String,
 
     @Column(nullable = false)
-    val password: String,
+    var password: String,      // ← var로 변경
 
     @Column(nullable = false)
-    val nickname: String,
+    var nickname: String,      // ← var로 변경
 
     @Enumerated(EnumType.STRING)
     val role: Role = Role.USER,

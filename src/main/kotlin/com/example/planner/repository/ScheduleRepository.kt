@@ -1,6 +1,7 @@
 package com.example.planner.repository
 
 import com.example.planner.domain.schedule.Schedule
+import com.example.planner.domain.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -28,4 +29,8 @@ interface ScheduleRepository : JpaRepository<Schedule, Long> {
         scheduleId: Long, title: String, description: String?,
         startDate: LocalDateTime, endDate: LocalDateTime
     ): Int
+
+    fun deleteAllByUser(user: User)
+
+    fun findAllByUser(user: User): List<Schedule>
 }
