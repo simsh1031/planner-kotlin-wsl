@@ -28,9 +28,14 @@ class SecurityConfig(
                 it
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()       // 회원가입만 허용
-                    .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()     // 조회는 허용 (필요시 authenticated로 변경)
-// PATCH, DELETE는 anyRequest().authenticated() 에 걸려서 자동으로 인증 필요
+                    // ↓ 이 두 줄 추가
+                    .requestMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**"
+                    ).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
