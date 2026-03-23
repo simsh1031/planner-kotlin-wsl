@@ -1,5 +1,6 @@
 package com.example.planner.service
 
+import com.example.planner.common.exception.AuthException
 import com.example.planner.domain.user.Role
 import com.example.planner.domain.user.User
 import com.example.planner.repository.MemoRepository
@@ -39,10 +40,10 @@ class UserService(
 
     fun login(email: String, password: String): User {
         val user = userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("Invalid email or password")
+            ?: throw AuthException("이메일 또는 비밀번호가 올바르지 않습니다.")  // 401
 
         if (user.password != password) {
-            throw IllegalArgumentException("Invalid email or password")
+            throw AuthException("이메일 또는 비밀번호가 올바르지 않습니다.")     // 401
         }
 
         return user
