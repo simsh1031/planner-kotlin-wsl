@@ -19,5 +19,11 @@ spring:
         # 실제 쿼리 포맷을 예쁘게 보여줍니다.
         format_sql: true
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
 jwt:
   secret: d8809f897212f945745ab98c886c5573

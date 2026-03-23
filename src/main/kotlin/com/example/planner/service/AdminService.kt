@@ -7,13 +7,13 @@ import com.example.planner.repository.MemoTagRepository
 import com.example.planner.repository.ScheduleRepository
 import com.example.planner.repository.TodoRepository
 import com.example.planner.repository.UserRepository
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 @Service
 @Transactional
-class UserService(
+class AdminService(
     private val userRepository: UserRepository,
     private val memoRepository: MemoRepository,
     private val memoTagRepository: MemoTagRepository,
@@ -21,15 +21,20 @@ class UserService(
     private val todoRepository: TodoRepository
 ) {
 
-    fun signUp(email: String, password: String, nickname: String): User {
-        val user = User(
-            email = email,
-            password = password,
-            nickname = nickname,
-            role = Role.USER,
-            createdAt = LocalDateTime.now()
-        )
-        return userRepository.save(user)
+    fun checkAdmin(httpRequest: HttpServletRequest) {
+        val tokenUserId = httpRequest.getAttribute("userId")?.toString()?.toLongOrNull()
+            ?: throw IllegalArgumentException("인증 정보가 없습니다.")
+
+        val user = userRepository.findById(tokenUserId)
+            .orElseThrow { IllegalArgumentException("유저를 찾을 수 없습니다.") }
+
+        if (user.role != Role.ADMIN) {
+            throw IllegalArgumentException("관리자만 접근할 수 있습니다.")
+        }
+    }
+
+    fun getAllUsers(): List<User> {
+        return userRepository.findAll()
     }
 
     fun findUser(userId: Long): User {
@@ -37,47 +42,19 @@ class UserService(
             .orElseThrow { IllegalArgumentException("User not found") }
     }
 
-    fun login(email: String, password: String): User {
-        val user = userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("Invalid email or password")
-
-        if (user.password != password) {
-            throw IllegalArgumentException("Invalid email or password")
-        }
-
-        return user
-    }
-
-    fun updateUser(
-        userId: Long,
-        nickname: String?,
-        currentPassword: String?,
-        newPassword: String?
-    ): User {
+    fun updateUser(userId: Long, nickname: String?, newPassword: String?): User {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
 
-        if (newPassword != null) {
-            if (currentPassword == null || user.password != currentPassword) {
-                throw IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.")
-            }
-            user.password = newPassword
-        }
-
-        if (nickname != null) {
-            user.nickname = nickname
-        }
+        if (nickname != null) user.nickname = nickname
+        if (newPassword != null) user.password = newPassword
 
         return userRepository.save(user)
     }
 
-    fun deleteUser(userId: Long, password: String) {
+    fun deleteUser(userId: Long) {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("User not found") }
-
-        if (user.password != password) {
-            throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
-        }
 
         // 1. Todo 삭제 (Schedule 참조)
         val schedules = scheduleRepository.findAllByUser(user)
