@@ -4,10 +4,12 @@ spring:
 
   datasource:
     # nameserver 주소를 사용합니다.
-    url: jdbc:mysql://172.25.144.1:3306/planner?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: "1031" # 숫자로만 되어있으니 따옴표를 붙여주는 게 안전합니다.
-
+#    url: jdbc:mysql://172.25.144.1:3306/planner?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://myapp-mysql.c9esaq0mwp19.ap-northeast-2.rds.amazonaws.com:3306/planner?useSSL=true&requireSSL=true&verifyServerCertificate=false
+#    username: root
+    username: admin
+#    password: "1031" # 숫자로만 되어있으니 따옴표를 붙여주는 게 안전합니다.
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update # none # create # update
