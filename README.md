@@ -275,3 +275,9 @@ spring:
 프로젝트 실행 후 다음 URL에서 Swagger UI 기반의 API 문서를 확인할 수 있습니다:
 - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
 - **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
+
+---
+
+## 9. 참고
+
+- **Notion**: `https://www.notion.so/wsl-31ae46a3dc7d800eafb6f9b2b94a3130?source=copy_link`
