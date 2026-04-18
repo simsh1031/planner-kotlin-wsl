@@ -280,4 +280,4 @@ spring:
 
 ## 9. 참고
 
-- **Notion**: `https://www.notion.so/wsl-31ae46a3dc7d800eafb6f9b2b94a3130?source=copy_link`
+- **Notion**: [프로젝트 문서](https://www.notion.so/wsl-31ae46a3dc7d800eafb6f9b2b94a3130?source=copy_link)
